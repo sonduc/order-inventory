@@ -1,0 +1,21 @@
+services:
+  workspace:
+    image: mcr.microsoft.com/devcontainers/java:21
+    command: sleep infinity
+    volumes:
+      - ..:/workspaces/order-inventory:cached
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      redis:
+        condition: service_started
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - order-inventory-redis-data:/data
+
+volumes:
+  order-inventory-redis-data:
