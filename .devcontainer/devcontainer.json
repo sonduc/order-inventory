@@ -1,0 +1,27 @@
+{
+  "name": "Order Inventory",
+  "image": "mcr.microsoft.com/devcontainers/java:21",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "installMaven": true,
+      "installGradle": false
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-spring-boot",
+        "vscjava.vscode-spring-initializr",
+        "vscjava.vscode-spring-boot-dashboard"
+      ],
+      "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.autobuild.enabled": true,
+        "java.debug.settings.hotCodeReplace": "auto"
+      }
+    }
+  },
+  "forwardPorts": [8081],
+  "postCreateCommand": "mvn -q -DskipTests package || true"
+}

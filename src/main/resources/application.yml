@@ -1,0 +1,64 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  profiles:
+    default: dev
+  application:
+    name: order-inventory
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:host.docker.internal}:${DB_PORT:5432}/${DB_NAME:order_inventory_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration,classpath:db/seed
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+  docker:
+    compose:
+      enabled: false
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:replace-with-a-long-local-secret}
+      access-token-ttl-seconds: ${JWT_ACCESS_TOKEN_TTL_SECONDS:3600}
+      issuer: ${JWT_ISSUER:order-inventory}
+  payment:
+    mock:
+      failure-rate: ${MOCK_PAYMENT_FAILURE_RATE:0.2}
+  scheduling:
+    stock-alert:
+      enabled: false
+      cron: "0 0/30 * * * *"
+    inventory-sync:
+      enabled: false
+      fixed-delay-ms: 900000
+  console:
+    enabled: false
+    command: ""
+    arguments: []
+
+logging:
+  level:
+    root: INFO
+    com.example.orderinventory: INFO
+    org.hibernate.SQL: WARN
